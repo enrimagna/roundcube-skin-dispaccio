@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title></title>
+<style type="text/css">
+@font-face { font-family: "Dispaccio Serif"; font-weight: 100 900; font-style: normal; src: url(fonts/fraunces-latin-opsz-normal.woff2) format("woff2"); }
+@font-face { font-family: "Dispaccio Serif"; font-weight: 100 900; font-style: italic; src: url(fonts/fraunces-latin-opsz-italic.woff2) format("woff2"); }
+@font-face { font-family: "Dispaccio Mono"; font-weight: 100 800; src: url(fonts/jetbrains-mono-latin-wght-normal.woff2) format("woff2"); }
+html, body { height: 100%; margin: 0; overflow: hidden; }
+body {
+  --bg: #F2F3F6; --ink: #0F1F3D; --mut: #56627A; --acc: #B84300; --stripe: rgba(15, 31, 61, .03);
+  background: var(--bg) repeating-linear-gradient(0deg, var(--stripe) 0 1px, transparent 1px 26px);
+  color: var(--ink);
+  display: flex; align-items: center; justify-content: center;
+}
+html.dark-mode body { --bg: #0B1426; --ink: #DDE5F3; --mut: #8A98B2; --acc: #FF8A3D; --stripe: rgba(255, 138, 61, .02); }
+.w { text-align: center; opacity: .55; }
+.n { font-family: "Dispaccio Serif", Georgia, serif; font-weight: 800; font-size: 44px; letter-spacing: -.02em; font-variation-settings: "opsz" 144; }
+.n i { font-weight: 400; color: var(--acc); }
+.r { font-family: "Dispaccio Mono", ui-monospace, monospace; font-size: 10.5px; letter-spacing: .16em; text-transform: uppercase; font-weight: 700;
+     color: var(--mut); border-top: 4px double var(--ink); border-bottom: 1px solid var(--ink); padding: 5px 14px; margin-top: 10px; }
+</style>
+<script>
+  try {
+    if (document.cookie.indexOf('colorMode=dark') > -1
+      || (document.cookie.indexOf('colorMode=light') === -1 && window.matchMedia('(prefers-color-scheme: dark)').matches)
+    ) {
+      document.documentElement.className += ' dark-mode';
+    }
+  } catch (e) { }
+</script>
+</head>
+<body><div class="w" aria-hidden="true"><div class="n">Il <i>Dispaccio</i></div><div class="r">&mdash; nessun dispaccio aperto &mdash;</div></div></body>
+</html>

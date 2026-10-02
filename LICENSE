@@ -1,0 +1,32 @@
+Il Dispaccio – Roundcube skin
+==============================
+
+This repository contains parts under different licences.
+
+1. dispaccio/  (the skin: templates, LESS sources, compiled CSS, images, localization, meta.json,
+   watermark.html, thumbnail.png), except dispaccio/fonts/*.woff2
+   Licence: Creative Commons Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0)
+   Full text: LICENSES/CC-BY-SA-3.0.txt  –  https://creativecommons.org/licenses/by-sa/3.0/
+
+   The skin is an adaptation of Roundcube's "Elastic" skin (© The Roundcube Dev Team,
+   design and code by Aleksander Machniak), which is distributed under CC BY-SA 3.0.
+   In particular dispaccio/templates/includes/layout.html is a modified copy of Elastic's
+   templates/includes/layout.html, and the LESS imports and overrides Elastic's sources.
+   Elastic itself is not redistributed here; it must be installed alongside (it ships with Roundcube).
+
+2. plugins/startup_folder/  (optional Roundcube plugin)
+   Licence: GNU General Public License v3.0 or later (GPL-3.0-or-later)
+   Full text: LICENSES/GPL-3.0.txt
+
+3. dispaccio/fonts/*.woff2
+   - JetBrains Mono – © 2020 The JetBrains Mono Project Authors – SIL Open Font License 1.1
+     (dispaccio/fonts/OFL-JetBrainsMono.txt)
+   - Fraunces – © 2020 The Fraunces Project Authors – SIL Open Font License 1.1
+     (dispaccio/fonts/OFL-Fraunces.txt)
+   The woff2 subsets come from the Fontsource packages @fontsource-variable/jetbrains-mono and
+   @fontsource-variable/fraunces.
+
+4. screenshots/ and README.md – CC BY-SA 3.0, like the skin. The mail shown in the screenshots
+   is fictitious sample data.
+
+Roundcube is a trademark of the Roundcube project; this skin is not an official Roundcube product.

@@ -1,0 +1,11 @@
+{
+    "name": "dispaccio/startup_folder",
+    "type": "roundcube-plugin",
+    "description": "Per-user startup folder: choose which mail folder opens after login and when clicking E-Mail.",
+    "license": "GPL-3.0-or-later",
+    "version": "1.0.0",
+    "require": {
+        "php": ">=7.4.0",
+        "roundcube/plugin-installer": ">=0.1.3"
+    }
+}

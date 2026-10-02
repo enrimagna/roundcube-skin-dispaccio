@@ -1,0 +1,19 @@
+<?php
+// Recommended settings for the «Il Dispaccio» skin.
+// Merge these lines into <roundcube>/config/config.inc.php, or (official Docker image)
+// drop this file as /var/roundcube/config/dispaccio.config.php.
+
+// Make Il Dispaccio the default skin (users can still pick another one in Preferences > User Interface)
+$config['skin'] = 'dispaccio';
+
+// Dates in the message list: today -> time, last 7 days -> weekday + time, older -> «23 set»
+$config['prettydate'] = true;
+$config['date_long'] = 'j M';
+
+// Required with date_long: otherwise the first save of Preferences > User Interface stores
+// "<date format> <time format>" (e.g. "Y-m-d H:i") in the user's prefs and «23 set» is lost.
+// Trade-off: users can't change the format of older dates in the list.
+$config['dont_override'] = array_values(array_unique(array_merge((array) ($config['dont_override'] ?? []), ['date_long'])));
+
+// Optional: per-user startup folder plugin (copy plugins/startup_folder into <roundcube>/plugins/ first)
+// $config['plugins'][] = 'startup_folder';

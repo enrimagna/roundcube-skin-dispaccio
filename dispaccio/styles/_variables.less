@@ -1,0 +1,165 @@
+/**
+ * Il Dispaccio – Elastic variable overrides (palette «Inchiostro»).
+ * Imported AFTER Elastic's styles.less: LESS variables are lazy-evaluated,
+ * so the last definition wins everywhere in the compiled Elastic CSS.
+ */
+
+// --- Palette «Inchiostro» (see NOTE.md section 05) ---------------------
+@d-bg:        #F2F3F6;   // sfondo
+@d-bg2:       #E6E9EF;   // pannelli
+@d-ink:       #0F1F3D;   // testo
+@d-mut:       #56627A;   // secondario (4.9:1+ on bg/bg2)
+@d-line:      #C9D0DC;   // linee
+@d-acc:       #B84300;   // accento arancio (4.9:1)
+@d-hi:        #0F1F3D;   // selezione: blocco
+@d-hiink:     #F2F3F6;   // selezione: testo
+
+@d-dk-bg:     #0B1426;
+@d-dk-bg2:    #101C33;
+@d-dk-ink:    #DDE5F3;
+@d-dk-mut:    #8A98B2;
+@d-dk-line:   #223250;
+@d-dk-acc:    #FF8A3D;
+@d-dk-hi:     #FF8A3D;
+@d-dk-hiink:  #0B1426;
+
+@d-font-mono:  "Dispaccio Mono", "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+@d-font-serif: "Dispaccio Serif", Fraunces, Georgia, "Times New Roman", serif;
+
+// --- Elastic: base ----------------------------------------------------
+@color-main:                #B84300;
+@color-main-dark:           darken(@color-main, 12%);
+@color-black:               @d-ink;
+@color-font:                @d-ink;
+@color-link:                @d-acc;
+@color-link-hover:          darken(@d-acc, 8%);
+@color-border:              @d-line;
+@color-error:               #B3261E;
+@color-success:             #2E7D32;
+@color-warning:             #E0A100;
+
+@color-black-shade-text:    @d-mut;
+@color-black-shade-border:  @d-line;
+@color-black-shade-bg:      @d-bg2;
+
+@color-layout-border:               @d-line;
+@color-layout-header:               @d-ink;
+@color-layout-sidebar-background:   @d-bg;
+@color-layout-list-background:      @d-bg;
+@color-layout-content-background:   @d-bg;
+@color-layout-header-background:    @d-bg;
+@color-layout-footer-background:    @d-bg;
+
+@color-taskmenu-background:                 @d-bg2;
+@color-taskmenu-button:                     @d-mut;
+@color-taskmenu-button-selected:            @d-hiink;
+@color-taskmenu-button-action:              @d-acc;
+@color-taskmenu-button-selected-background: @d-hi;
+@color-taskmenu-button-hover:               @d-ink;
+@color-taskmenu-button-selected-hover:      @d-hiink;
+@color-taskmenu-button-action-hover:        @d-acc;
+@color-taskmenu-button-background-hover:    darken(@d-bg2, 5%);
+@color-taskmenu-button-logout:              @d-mut;
+@color-taskmenu-button-logout-hover:        @d-ink;
+
+@color-toolbar-button:                  @d-ink;
+@color-toolbar-button-background-hover: @d-bg2;
+@color-searchbar-background:            @d-bg2;
+
+@color-menu-hover:               @d-hiink;
+@color-menu-hover-background:    @d-hi;
+
+@color-list:                        @d-ink;
+@color-list-selected:               @d-hiink;
+@color-list-selected-background:    @d-hi;
+@color-list-flagged:                @d-acc;
+@color-list-deleted:                fadeout(@d-ink, 50%);
+@color-list-secondary:              @d-mut;
+@color-list-droptarget-background:  #FFE9D6;
+@color-list-focus-indicator:        @d-acc;
+@color-list-border:                 @d-line;
+@color-list-badge:                  @d-bg;
+@color-list-badge-background:       @d-acc;
+@color-list-recent:                 @d-acc;
+@color-list-recent-badge:           @d-bg;
+@color-list-recent-badge-background: @d-acc;
+@color-list-pagenav:                @d-mut;
+@color-list-icon:                   @d-mut;
+@color-list-unread-status:          @d-acc;
+
+@color-attachmentlist-border:       @d-line;
+@color-attachmentlist-background:   transparent;
+@color-drag-layer:                  @d-hiink;
+@color-drag-layer-background:       @d-hi;
+
+@color-popover-shadow:              fadeout(@d-ink, 85%);
+@color-popover-separator:           @d-mut;
+@color-popover-separator-background: @d-bg2;
+@color-popover-mobile-header:               @d-hiink;
+@color-popover-mobile-header-background:    @d-hi;
+@color-popover-mobile-dropbutton-background: @d-bg2;
+
+@color-input-border:                @d-line;
+@color-input-placeholder:           @d-mut;
+@color-input-addon-background:      @d-bg2;
+@color-recipient-input-background:  @d-bg2;
+@color-image-upload-background:     @d-bg2;
+@color-btn-secondary-background:    @d-mut;
+@color-btn-primary:                 #fff;
+@color-btn-primary-background:      @d-acc;
+
+@color-quota-background:            @d-bg2;
+@color-quota-text:                  @d-mut;
+@color-quota-value:                 @d-acc;
+
+@color-blockquote-background:       transparent;
+@color-blockquote-0:                @d-mut;
+@color-blockquote-0-border:         @d-acc;
+@color-mail-signature:              @d-mut;
+@color-mail-headers:                @d-mut;
+@color-messagepart-border:          @d-line;
+@color-messagepart-background:      @d-bg2;
+
+@color-datepicker-highlight-background: #FFE3CC;
+@color-scrollbar-thumb:     @d-line;
+@color-scrollbar-track:     @d-bg;
+
+// --- Elastic: dark mode ----------------------------------------------
+@color-dark-main:           @d-dk-acc;
+@color-dark-background:     @d-dk-bg;
+@color-dark-font:           @d-dk-ink;
+@color-dark-border:         @d-dk-line;
+@color-dark-hint:           @d-dk-mut;
+
+@color-dark-list-selected:              @d-dk-hiink;
+@color-dark-list-selected-background:   @d-dk-hi;
+@color-dark-list-badge:                 @d-dk-bg;
+@color-dark-list-badge-background:      @d-dk-acc;
+@color-dark-list-border:                @d-dk-line;
+
+@color-dark-input:                      @d-dk-ink;
+@color-dark-input-border:               #3A4E75;
+@color-dark-input-background:           @d-dk-bg;
+@color-dark-input-focus:                #FFFFFF;
+@color-dark-input-border-focus:         @d-dk-acc;
+@color-dark-input-background-focus:     @d-dk-bg2;
+@color-dark-input-addon-background:     @d-dk-bg2;
+@color-dark-input-addon-background-focus: #1A2A4A;
+@color-dark-checkbox:                   @d-dk-line;
+@color-dark-checkbox-checked:           @d-dk-acc;
+
+@color-dark-btn:                        @d-dk-bg;
+@color-dark-btn-primary-background:     @d-dk-acc;
+@color-dark-btn-secondary-background:   #3A4E75;
+
+@color-dark-popover-background:         @d-dk-bg2;
+@color-dark-popover-border:             @d-dk-line;
+@color-dark-scrollbar-thumb:            #2E426A;
+@color-dark-scrollbar-track:            @d-dk-bg;
+@color-dark-blockquote-0:               @d-dk-mut;
+@color-dark-blockquote-0-border:        @d-dk-acc;
+
+// Fonts: every Elastic ".font-family()" call now yields the monospace stack
+.font-family {
+    font-family: @d-font-mono;
+}

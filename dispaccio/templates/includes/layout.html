@@ -1,0 +1,123 @@
+<roundcube:add_label name="back" />
+<roundcube:add_label name="errortitle" />
+<roundcube:add_label name="options" />
+<roundcube:add_label name="plaintoggle" />
+<roundcube:add_label name="htmltoggle" />
+<roundcube:add_label name="previous" />
+<roundcube:add_label name="next" />
+<roundcube:add_label name="select" />
+<roundcube:add_label name="close" />
+<roundcube:add_label name="browse" />
+<roundcube:add_label name="choosefile" />
+<roundcube:add_label name="choosefiles" />
+<roundcube:object name="doctype" value="html5" />
+<roundcube:if condition="!env:framed || env:extwin" />
+<html>
+<roundcube:else />
+<html class="iframe">
+<roundcube:endif />
+<head>
+	<roundcube:object name="meta" />
+	<roundcube:object name="links" />
+	<link rel="stylesheet" href="/deps/bootstrap.min.css">
+	<roundcube:if condition="config:devel_mode" />
+		<link rel="stylesheet/less" href="/styles/styles.less">
+		<roundcube:link rel="stylesheet/less" href="/styles/print.less" condition="env:action == 'print'" />
+		<script src="/deps/less.min.js" data-env="development"></script>
+	<roundcube:else />
+		<link rel="stylesheet" href="/styles/styles.css">
+		<roundcube:link rel="stylesheet" href="/styles/print.css" condition="env:action == 'print'" />
+	<roundcube:endif />
+	<roundcube:if condition="env:action != 'print' && !config:devel_mode && config:dark_mode_support" />
+		<script>
+		try {
+			if (document.cookie.indexOf('colorMode=dark') > -1
+				|| (document.cookie.indexOf('colorMode=light') === -1 && window.matchMedia('(prefers-color-scheme: dark)').matches)
+			) {
+				document.documentElement.className += ' dark-mode';
+			}
+		} catch (e) { }
+		</script>
+	<roundcube:endif />
+</head>
+<body class="task-<roundcube:exp expression="env:error_task ?: env:task ?: 'error'"> action-<roundcube:exp expression="asciiwords(env:action, true, '-') ?: 'none'">">
+	<roundcube:if condition="!env:framed && !env:extwin && env:action != 'print' && env:task != 'login' && env:task != 'logout'" />
+	<!-- Il Dispaccio: masthead (the only markup added by this skin) -->
+	<header id="dispaccio-masthead" role="banner">
+		<div class="mast-row">
+			<div class="mast-left">
+				<roundcube:button command="compose" type="link" class="mast-compose" label="dispacciocompose" title="writenewmessage" innerclass="inner" />
+			</div>
+			<a class="mast-name" href="./?_task=mail&amp;_mbox=INBOX" onclick="return window.rcmail ? rcmail.command('mail', '', this, event) : true" title="<roundcube:label name="mail" />"><span>Il</span> <i>Dispaccio</i></a>
+			<div class="mast-right"></div>
+		</div>
+		<div class="mast-dateline">
+			<span class="mast-date" id="dispaccio-date"></span>
+			<span class="mast-counts" id="dispaccio-counts"></span>
+			<span class="mast-user"><roundcube:object name="username" /></span>
+		</div>
+	</header>
+	<script>
+	(function() {
+		var months = ['Dom','Lun','Mar','Mer','Gio','Ven','Sab'];
+		function pad(n) { return (n < 10 ? '0' : '') + n; }
+		var d = new Date(), el = document.getElementById('dispaccio-date');
+		if (el) el.textContent = months[d.getDay()] + ' ' + pad(d.getDate()) + '.' + pad(d.getMonth() + 1) + '.' + d.getFullYear()
+			+ ' \u00b7 edizione delle ' + pad(d.getHours()) + ':' + pad(d.getMinutes());
+		function counts() {
+			var c = document.getElementById('dispaccio-counts'), env = window.rcmail && rcmail.env;
+			if (!c || !env || env.task != 'mail' || !env.unread_counts) return;
+			var unread = env.unread_counts.INBOX || 0, html = '<b>' + unread + ' non lett' + (unread == 1 ? 'a' : 'e') + '</b>';
+			if (env.messagecount !== undefined && env.mailbox) {
+				var name = $('#mailboxlist li.mailbox.selected > a .name, #mailboxlist li.mailbox.selected > a').first().clone().children().remove().end().text().trim();
+				html += '<span class="mast-total"> \u00b7 ' + env.messagecount + ' in ' + (name || env.mailbox).toLowerCase() + '</span>';
+			}
+			c.innerHTML = html;
+		}
+		document.addEventListener('DOMContentLoaded', function() {
+			if (!window.rcmail) return;
+			rcmail.addEventListener('init', counts);
+			rcmail.addEventListener('listupdate', counts);
+			rcmail.addEventListener('responseafter', counts);
+		});
+		window.addEventListener('load', counts);
+
+		// Elastic only creates the row hover menu (size · flag · delete) if the page was LOADED wider than
+		// 1024px (touch mode otherwise). When a window is widened later (or a mobile emulator is switched off)
+		// the menu never appears. Same markup/behaviour as Elastic's message_list_hover_menu_init(), created on demand.
+		function hoverMenu() {
+			var list = window.rcmail && rcmail.message_list, wrap = $('#messagelist').parent();
+			if (!list || !wrap.length || $('html').is('.touch') || wrap.children('.listing-hover-menu').length) return;
+			var record, label = function(l) { return rcmail.gettext(l); },
+				menu = $('<div class="menu listing-hover-menu"><span class="txt"></span>'
+					+ '<a class="button flag" data-flag="flagged" title="' + label('markasflagged') + '"></a>'
+					+ '<a class="button unflag d-none" data-flag="unflagged" title="' + label('markasunflagged') + '"></a>'
+					+ '<a class="button delete" data-flag="delete" title="' + label('deletemessage') + '"></a>'
+					+ '<a class="button undo d-none" data-flag="undelete" title="' + label('undeletemessage') + '"></a></div>'),
+				hide = function() { menu.css({ top: '-1000px' }); record = null; },
+				show = function(tr) {
+					var m = list.rows[tr.uid], el = $(tr);
+					if (!m || $('html').is('.touch')) return hide();
+					menu.css({ top: (el.offset().top - el.parent().offset().top + (el.height() - menu.outerHeight()) / 2) + 'px' });
+					var b = { flag: !m.flagged, unflag: m.flagged, 'delete': !m.deleted, undo: m.deleted };
+					$.each(b, function(k, v) { menu.find('a.' + k)[v ? 'removeClass' : 'addClass']('d-none'); });
+					menu.find('span.txt').text(el.closest('table').is('.sort-size') ? m.date : m.size);
+				};
+			wrap.append(menu)
+				.on('mouseenter', 'tr', function(e) { if (record != e.currentTarget) show(record = e.currentTarget); })
+				.on('mouseleave', 'tr', function(e) { if (e.relatedTarget == wrap[0]) hide(); })
+				.on('mouseleave', hide);
+			menu.find('a').on('click', function(e) {
+				var flag = $(this).data('flag');
+				if (flag == 'delete') rcmail.delete_messages(e, record.uid); else rcmail.mark_message(flag, record.uid);
+				hide();
+			});
+		}
+		var resizeTimer;
+		window.addEventListener('resize', function() { clearTimeout(resizeTimer); resizeTimer = setTimeout(hoverMenu, 300); });
+	})();
+	</script>
+	<roundcube:endif />
+	<roundcube:if condition="!env:framed || env:extwin" />
+		<div id="<roundcube:exp expression="env:action == 'print' ? 'print-' : ''">layout">
+	<roundcube:endif />

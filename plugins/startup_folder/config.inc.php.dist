@@ -1,0 +1,10 @@
+<?php
+
+// Startup folder plugin: folder opened after login and when the mail task is opened
+// without an explicit folder, for users who haven't chosen one in
+// Settings > Preferences > Mailbox View. IMAP folder name, e.g. 'INBOX' or 'Progetti'.
+// If the folder doesn't exist for a user, INBOX is used.
+$config['startup_folder_default'] = 'INBOX';
+
+// To fix the folder for everybody and hide the preference, also add 'startup_folder'
+// to $config['dont_override'] in Roundcube's main config.

@@ -1,0 +1,11 @@
+# build / editor leftovers
+node_modules/
+*.zip
+.DS_Store
+Thumbs.db
+*.swp
+*~
+.idea/
+.vscode/
+# local plugin config (copy of config.inc.php.dist)
+plugins/startup_folder/config.inc.php

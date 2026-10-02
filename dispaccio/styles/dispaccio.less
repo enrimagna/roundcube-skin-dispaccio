@@ -1,0 +1,1312 @@
+/**
+ * Il Dispaccio – custom rules on top of Elastic.
+ * Palette as CSS custom properties so light/dark switch with html.dark-mode,
+ * exactly like Elastic does.
+ */
+
+@page-font-size: 13px;
+
+:root {
+    --d-bg: @d-bg; --d-bg2: @d-bg2; --d-ink: @d-ink; --d-mut: @d-mut; --d-line: @d-line;
+    --d-acc: @d-acc; --d-hi: @d-hi; --d-hiink: @d-hiink; --d-flag: @d-acc;
+    --d-stripe: rgba(15, 31, 61, .03);
+}
+html.dark-mode {
+    --d-bg: @d-dk-bg; --d-bg2: @d-dk-bg2; --d-ink: @d-dk-ink; --d-mut: @d-dk-mut; --d-line: @d-dk-line;
+    --d-acc: @d-dk-acc; --d-hi: @d-dk-hi; --d-hiink: @d-dk-hiink; --d-flag: @d-dk-acc;
+    --d-stripe: rgba(255, 138, 61, .02);
+    color-scheme: dark;
+}
+
+.d-cap() {
+    font-size: 11px;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    font-weight: 700;
+    font-variant-caps: normal;
+}
+.d-stripes() {
+    background-image: repeating-linear-gradient(0deg, var(--d-stripe) 0 1px, transparent 1px 26px);
+}
+.d-reset-icon() {
+    font-family: inherit;
+    font-weight: 700;
+    font-size: inherit;
+    line-height: inherit;
+    width: auto;
+    height: auto;
+    float: none;
+    display: inline;
+    margin: 0;
+}
+
+/* ------------------------------------------------------------------ */
+/* Base: one font everywhere, square corners, ink colours             */
+/* ------------------------------------------------------------------ */
+
+html, body, input, select, textarea, button, .btn, .form-control, .custom-select,
+.popover, .ui-widget, .ui-dialog, .ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button,
+.tooltip, .listing, .menu, .formcontent, .propform, .message-part div.pre {
+    font-family: @d-font-mono;
+    font-feature-settings: "calt" 0, "liga" 0;
+}
+
+body {
+    background-color: var(--d-bg);
+    color: var(--d-ink);
+}
+
+.btn, .form-control, .custom-select, .input-group-text, .input-group > .form-control,
+.popover, .ui-dialog, .ui-dialog .ui-dialog-titlebar, .ui-dialog .ui-dialog-buttonpane,
+.listing-hover-menu, .quota-widget, .quota-widget .bar, .badge, .alert, .toast, #messagestack div,
+.searchbar, .searchbar input, .recipient-input, .custom-switch .custom-control-label::before,
+.floating-action-buttons a, #layout-menu, .popover-body {
+    border-radius: 0 !important;
+}
+
+.btn { letter-spacing: .04em; font-weight: 700; }
+.btn-primary { color: var(--d-bg) !important; }
+
+a { color: var(--d-acc); }
+
+#layout-sidebar, #layout-list, #layout-content, html.iframe body {
+    .d-stripes();
+}
+
+/* ------------------------------------------------------------------ */
+/* Masthead (from templates/includes/layout.html)                     */
+/* ------------------------------------------------------------------ */
+
+body:has(> #dispaccio-masthead) {
+    display: flex;
+    flex-direction: column;
+
+    & > #layout {
+        flex: 1 1 auto;
+        height: auto;
+        min-height: 0;
+    }
+}
+
+#dispaccio-masthead {
+    flex: none;
+    padding: 0 20px;
+    color: var(--d-ink);
+    background-color: var(--d-bg);
+    .d-stripes();
+    border-bottom: 1px solid var(--d-line);
+
+    .mast-row {
+        height: 64px;
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        align-items: center;
+        gap: 16px;
+    }
+
+    .mast-left { justify-self: start; }
+    .mast-right { justify-self: end; }
+
+    .mast-compose {
+        display: inline-block;
+        background: var(--d-acc);
+        color: var(--d-bg);
+        font-weight: 800;
+        font-size: 12px;
+        letter-spacing: .06em;
+        text-transform: uppercase;
+        padding: 6px 13px;
+        text-decoration: none;
+        white-space: nowrap;
+
+        &:hover, &:focus { background: var(--d-ink); color: var(--d-bg); }
+        &.disabled { opacity: .5; }
+    }
+
+    .mast-name {
+        font-family: @d-font-serif;
+        font-weight: 800;
+        font-size: 40px;
+        line-height: 1;
+        letter-spacing: -.02em;
+        font-variation-settings: "opsz" 144;
+        color: var(--d-ink);
+        text-decoration: none;
+        white-space: nowrap;
+
+        i {
+            font-weight: 400;
+            font-style: italic;
+            color: var(--d-acc);
+        }
+    }
+
+    .mast-right {
+        width: 380px;
+        max-width: 100%;
+        height: 34px;
+        border: 1px solid var(--d-line);
+        background: var(--d-bg2);
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        padding: 0 12px;
+    }
+
+    .mast-prompt-hint {
+        color: var(--d-mut);
+        font-size: 11.5px;
+        white-space: nowrap;
+    }
+
+    .mast-dateline {
+        .d-cap();
+        font-size: 10.5px;
+        border-top: 4px double var(--d-ink);
+        border-bottom: 1px solid var(--d-ink);
+        height: 26px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        white-space: nowrap;
+        overflow: hidden;
+
+        b { color: var(--d-acc); font-weight: 700; }
+        .mast-user:after { content: " \00b7  imap \25cf  connesso"; }
+    }
+}
+
+// Search prompt only exists as a real field in the mail view.
+body:not(.task-mail.action-none) #dispaccio-masthead .mast-right {
+    visibility: hidden;
+}
+
+html.layout-small, html.layout-phone, html.touch {
+    #dispaccio-masthead {
+        padding: 0 10px;
+
+        .mast-row {
+            height: 44px;
+            grid-template-columns: 1fr;
+            justify-items: center;
+        }
+        .mast-left, .mast-right { display: none; }
+        .mast-name { font-size: 26px; }
+        .mast-dateline {
+            .mast-total { display: none; }
+            height: 22px;
+            font-size: 9.5px;
+            letter-spacing: .1em;
+            border-top-width: 3px;
+            .mast-user { display: none; }
+        }
+    }
+}
+
+/* ------------------------------------------------------------------ */
+/* Task menu (left rail): quiet panel, inverted block when selected   */
+/* ------------------------------------------------------------------ */
+
+#layout-menu {
+    border-right: 1px solid var(--d-line);
+
+    #taskmenu a {
+        font-size: 10.5px;
+        letter-spacing: .04em;
+        span.inner { font-weight: 500; }
+    }
+}
+
+html.layout-large:not(.touch), html.layout-normal:not(.touch) {
+    // compose lives in the masthead on desktop (in touch mode the masthead is compact, so keep Elastic's)
+    #layout-menu #taskmenu .action-buttons { display: none; }
+}
+
+/* ------------------------------------------------------------------ */
+/* Panels: headers become small-caps section labels over a solid rule */
+/* ------------------------------------------------------------------ */
+
+#layout > div > .header {
+    border-bottom: 1px solid var(--d-line);
+}
+
+#layout > #layout-sidebar {
+    border-right: 1px solid var(--d-line);
+
+    & > .header {
+        margin: 0 14px;
+        padding: 0;
+        border-bottom: 1px solid var(--d-ink);
+        justify-content: space-between;
+
+        .header-title.username {
+            font-size: 0;
+            text-align: left;
+            padding: 0;
+            &:before {
+                content: "Sezioni";
+                .d-cap();
+                color: var(--d-mut);
+            }
+        }
+    }
+
+    & > .footer {
+        margin: 12px 14px 10px;
+        padding-top: 8px;
+        border-top: 4px double var(--d-ink);
+        height: auto;
+        min-height: 0;
+        line-height: 1.6;
+        display: block;
+        white-space: normal;
+        text-align: left;
+        font-weight: 400;
+
+        &:before {
+            content: "Tiratura";
+            display: block;
+            .d-cap();
+            color: var(--d-mut);
+            margin-bottom: 6px;
+        }
+    }
+
+    .quota-widget {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        width: 100%;
+        color: var(--d-mut);
+
+        .count { font-size: 12px; }
+        .bar {
+            background: var(--d-line);
+            height: 10px;
+            .value { background: var(--d-acc); }
+        }
+    }
+}
+
+/* Folder list: numbered, UPPERCASE, dot leaders, inverted selection */
+#mailboxlist {
+    counter-reset: dfolder;
+    padding: 6px 8px 0;
+    box-sizing: border-box;
+    width: 100%;
+
+    li.mailbox {
+        counter-increment: dfolder;
+        border: 0;
+        background: transparent;
+
+        & > a {
+            display: flex;
+            align-items: center;
+            height: auto;
+            line-height: 26px;
+            padding: 0 6px;
+            text-transform: uppercase;
+            font-size: 12.5px;
+            color: var(--d-ink);
+            white-space: nowrap;
+
+            &:before {
+                .d-reset-icon();
+                content: counter(dfolder);
+                font-weight: 400;
+                color: var(--d-mut);
+                margin-right: 8px;
+                min-width: 1ch;
+            }
+
+            &:after {
+                content: " ....................................................................";
+                order: 1;
+                flex: 1 1 auto;
+                min-width: 2ch;
+                overflow: hidden;
+                white-space: nowrap;
+                color: var(--d-line);
+                letter-spacing: 2px;
+                margin-left: 6px;
+            }
+
+            .unreadcount {
+                order: 2;
+                flex: 0 0 auto;   // never let flex squeeze the count into the padding
+                position: static;
+                float: none;
+                background: transparent !important;
+                color: inherit !important;
+                font-size: inherit;
+                font-weight: 700;
+                padding: 0 0 0 6px;
+                margin: 0;
+                min-width: 0;
+                line-height: inherit;
+                top: auto;
+                right: auto;
+                border: 0;
+            }
+        }
+
+        &.unread > a { font-weight: 700; }
+
+        &.selected > a {
+            background-color: var(--d-hi) !important;
+            color: var(--d-hiink) !important;
+            font-weight: 700;
+
+            &:before { color: var(--d-hiink); }
+            &:after { color: var(--d-hiink); opacity: .45; }
+        }
+
+        &.droptarget > a { outline: 1px dashed var(--d-acc); }
+
+        // treetoggle for subfolders
+        div.treetoggle { color: var(--d-mut); }
+    }
+
+    // First user folder after the special ones gets the «Rubriche» label
+    & > li.mailbox:is(.inbox, .drafts, .sent, .junk, .trash, .archive) + li.mailbox:not(.inbox, .drafts, .sent, .junk, .trash, .archive):before {
+        content: "Rubriche";
+        display: block;
+        .d-cap();
+        color: var(--d-mut);
+        border-bottom: 1px solid var(--d-ink);
+        padding: 0 0 5px;
+        margin: 18px 6px 8px;
+    }
+}
+
+/* ------------------------------------------------------------------ */
+/* Message list                                                       */
+/* ------------------------------------------------------------------ */
+
+#layout-list {
+    border-right: 1px solid var(--d-line);
+
+    & > .header {
+        .toolbar a span.inner, .toolbar-button span.inner { .d-cap(); font-size: 9.5px; font-weight: 500; color: var(--d-mut); }
+    }
+
+    & > .footer.pagenav {
+        border-top: 0;
+        color: var(--d-mut);
+        font-size: 12px;
+        .pagenav-text:before { content: "\2500\2500  "; }
+        .pagenav-text:after { content: "  \2500\2500"; }
+    }
+}
+
+// «/ cerca:» prompt look for the quick search
+.searchbar {
+    background: var(--d-bg2) !important;
+    border: 1px solid var(--d-line);
+
+    form:before {
+        content: "/";
+        color: var(--d-acc);
+        font-weight: 800;
+        margin: 0 6px 0 2px;
+    }
+    form { display: flex; align-items: center; }
+
+    input {
+        font-family: @d-font-mono;
+        color: var(--d-ink) !important;
+        background: transparent !important;
+        caret-color: var(--d-acc);
+        &::placeholder { color: var(--d-mut); }
+    }
+    a.button:before { color: var(--d-mut); }
+}
+
+// On desktop the mail search is lifted into the masthead prompt box
+// (not in touch mode: there the masthead is the compact one without the prompt box).
+html.layout-large:not(.touch), html.layout-normal:not(.touch) {
+    body.task-mail.action-none:has(> #dispaccio-masthead) #layout-list .searchbar {
+        position: fixed;
+        top: 15px;
+        right: 21px;
+        width: 378px;
+        height: 34px;
+        z-index: 5;
+        border: 0;
+        background: transparent !important;
+        margin: 0;
+        padding: 0 0 0 10px;
+
+        form { flex: 1; position: relative; }
+        form:has(input:placeholder-shown):after {
+            content: "from: subject: is:";
+            position: absolute;
+            right: 4px;
+            color: var(--d-mut);
+            font-size: 11.5px;
+            pointer-events: none;
+        }
+        input { height: 32px; line-height: 32px; padding: 0 4px; border: 0; box-shadow: none; }
+        input::placeholder { color: var(--d-ink); opacity: .75; }
+    }
+    body.task-mail.action-none:has(> #dispaccio-masthead) #searchmenu {
+        position: fixed;
+        top: 56px !important;
+        right: 20px !important;
+        left: auto !important;
+        width: 380px !important;
+        z-index: 10;
+        border: 1px solid var(--d-ink);
+        background: var(--d-bg);
+    }
+}
+
+// Column header «#  NF+  MITTENTE › OGGETTO .... DATA» (re-uses the list's hidden h2)
+html:not(.touch) #messagelist-content > #aria-label-messagelist {
+    position: sticky !important;
+    top: 0;
+    z-index: 2;
+    display: flex !important;
+    justify-content: space-between;
+    width: auto !important;
+    height: auto !important;
+    clip: auto !important;
+    overflow: visible !important;
+    margin: 0 14px !important;
+    padding: 12px 6px 5px !important;
+    font-size: 0 !important;
+    background: var(--d-bg);
+    border-bottom: 1px solid var(--d-ink);
+
+    &:before {
+        content: "#\00a0\00a0\00a0NF+\00a0\00a0Mittente \203a  oggetto";
+        white-space: pre;
+        .d-cap();
+        color: var(--d-mut);
+    }
+    &:after {
+        content: "Data";
+        .d-cap();
+        color: var(--d-mut);
+    }
+}
+
+#messagelist {
+    counter-reset: dmsg;
+
+    tbody tr.message {
+        counter-increment: dmsg;
+    }
+
+    tr.message td {
+        color: var(--d-ink);
+    }
+
+    // flagged rows keep ink colour; the «!» carries the signal
+    tr.flagged td,
+    tr.flagged span.size,
+    tr.flagged td.subject span.subject a,
+    tr.flagged td.subject span.date,
+    tr.flagged td.subject span.fromto {
+        color: var(--d-ink);
+    }
+
+    tr.unread td.subject span.subject,
+    tr.unread td.subject span.fromto {
+        font-weight: 800;
+    }
+
+    tr.selected,
+    tr.selected td {
+        background-color: var(--d-hi) !important;
+        color: var(--d-hiink) !important;
+
+        td.subject span.date, td.subject span.fromto, td.subject span.size, td.subject span.subject a,
+        td.flags, td.flags span, td.subject span.msgicon {
+            color: var(--d-hiink) !important;
+        }
+    }
+}
+
+.listing-hover-menu {
+    background-color: var(--d-bg);
+    border: 1px solid var(--d-ink);
+    box-shadow: none;
+
+    a.button { color: var(--d-ink); }
+    span.txt { color: var(--d-mut); }
+}
+
+html:not(.touch) #messagelist {
+    padding: 0 14px;
+    display: block;
+
+    tbody { display: block; }
+
+    tr.message {
+        display: flex;
+        align-items: flex-start;
+        position: relative;
+        padding: 9px 6px;
+        border-bottom: 1px dashed var(--d-line);
+
+        &:before {
+            content: counter(dmsg, decimal-leading-zero);
+            order: -3;
+            flex: none;
+            width: 4ch;
+            line-height: 1.6;
+            color: var(--d-mut);
+        }
+
+        &.selected:before { color: var(--d-hiink); }
+    }
+
+    tr.message td {
+        border: 0;
+        padding: 0;
+        line-height: 1.6;
+        background: transparent;
+        font-size: 13px !important;
+    }
+
+    td.selection { order: -4; flex: none; width: 3ch; }
+    td.threads { order: -2; flex: none; width: 2ch; padding: 0; }
+    td.threads div:before { line-height: 1.6; }
+
+    // flag column «N ! +»
+    td.flags {
+        order: -1;
+        flex: none;
+        width: 5ch;
+        display: flex;
+        font-weight: 700;
+        color: var(--d-flag);
+        letter-spacing: 0;
+
+        &:before { content: ""; width: 1ch; }   // slot for the status char (see msgicon)
+
+        & > span {
+            display: inline-block;
+            width: 1ch;
+            height: auto;
+            line-height: 1.6;
+            text-align: center;
+        }
+
+        span.flag > span:before,
+        span.flag > span.unflagged:before {
+            .d-reset-icon();
+            content: "\00b7";
+            color: var(--d-mut);
+        }
+        span.flag > span.flagged:before {
+            content: "!";
+            color: var(--d-flag);
+        }
+
+        span.attachment {
+            font-size: 0 !important;
+            & > span { display: none; }
+            &:before { content: "\00b7"; font-size: 13px; color: var(--d-mut); }
+            &:has(> span):before { content: "+"; color: var(--d-flag); }
+        }
+    }
+
+    tr.message td.subject {
+        order: 0;
+        flex: 1 1 auto;
+        min-width: 0;
+        position: relative;
+        display: flex;
+        flex-wrap: nowrap;
+        overflow: visible;
+        padding-bottom: 0;
+
+        span {
+            line-height: 1.6;
+        }
+
+        span.fromto {
+            order: 1;
+            flex: 0 1 auto;
+            max-width: 42%;
+            font-size: 13px;
+            padding: 0;
+            color: var(--d-ink);
+        }
+
+        // Separator « › » is a flex item of its own (td.subject::after, order 2), NOT a ::before
+        // inside span.subject: that span is overflow:hidden + text-overflow:ellipsis, and a
+        // pseudo-element inside an ellipsis box can be clipped/collapsed when the box gets narrow
+        // or is re-laid-out (row state change after opening a message).
+        &:after {
+            content: "\00a0\203a\00a0";
+            order: 2;
+            flex: none;
+            line-height: 1.6;
+            font-weight: 400;
+            color: var(--d-mut);
+            white-space: pre;
+        }
+
+        span.subject {
+            order: 3;
+            flex: 1 1 0;
+            width: auto;
+            min-width: 8ch;          // the subject never collapses to nothing
+            padding-right: 1ch;
+
+            a { color: inherit; }
+        }
+
+        span.date {
+            order: 4;
+            flex: none;
+            font-size: 13px;
+            color: var(--d-mut);
+            text-align: right;
+        }
+
+        // size only replaces the date when sorting by size (Elastic's .sort-size logic)
+        span.size {
+            order: 4;
+            flex: none;
+            font-size: 13px;
+            color: var(--d-mut);
+            text-align: right;
+        }
+
+        // status char (N / R / ·) moved into the flag column, stays clickable
+        span.msgicon.status {
+            position: absolute;
+            left: -5ch;
+            top: 0;
+            width: 1ch;
+            z-index: 1;
+
+            &:before, &.unread:before, &.replied:before, &.forwarded:before, &.unreadchildren:before {
+                .d-reset-icon();
+                content: "\00b7";
+                color: var(--d-mut);
+                display: block;
+                text-align: center;
+                cursor: pointer;
+            }
+            &.unread:before, &.unreadchildren:before { content: "N"; color: var(--d-flag); }
+            &.replied:before { content: "R"; color: var(--d-mut); }
+            &.forwarded:before { content: "F"; color: var(--d-mut); }
+            &.replied.forwarded:after { display: none; }
+        }
+
+    }
+
+    tr.unread td.subject span.date { color: var(--d-ink); }
+
+    tr.selected td.subject:after,
+    tr.selected td.flags span:before,
+    tr.selected td.subject span.msgicon.status:before {
+        color: var(--d-hiink) !important;
+    }
+}
+
+// touch / phone: keep Elastic's structure, only palette + font
+html.touch #messagelist {
+    tr.message { border-bottom: 1px dashed var(--d-line); }
+    tr.message td { border-bottom: 0; }
+    td.subject span.fromto { color: var(--d-mut); }
+    span.flagged:before, tr.flagged td.subject span.subject a { color: var(--d-flag); }
+    td.subject span.msgicon.status:before { color: var(--d-flag); }
+}
+
+/* ------------------------------------------------------------------ */
+/* Content pane toolbar: bordered keycaps                             */
+/* ------------------------------------------------------------------ */
+
+html.layout-large, html.layout-normal {
+    #layout-content > .header #toolbar-menu {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        flex: 1;
+        min-width: 0;
+        overflow: hidden;
+        height: 100%;
+        padding: 0 4px 0 10px;
+
+        li {
+            display: flex;
+            align-items: center;
+            height: auto;
+            border: 0 !important;
+            &.spacer { flex: 1 1 auto; background: none !important; height: 0; }
+            &:has(> a:is(.hidden, .hidden-big, .hidden-lbs)) { display: none; }
+        }
+        li > a:is(.hidden, .hidden-big, .hidden-lbs) { display: none !important; }
+
+        li > a, li > .dropbutton > a:first-child {
+            display: flex !important;
+            align-items: center;
+            height: 28px !important;
+            min-width: 0 !important;
+            max-width: 11rem !important;
+            padding: 0 7px !important;
+            line-height: 26px !important;
+            border: 1px solid var(--d-ink) !important;
+            color: var(--d-ink);
+            background: transparent;
+            float: none;
+
+            &:before {
+                height: auto !important;
+                font-size: 11px;
+                line-height: 26px;
+                margin: 0 6px 0 0 !important;
+                color: var(--d-acc);
+            }
+            span.inner { font-size: 11px; overflow: hidden; text-overflow: ellipsis; }
+            &:not(.disabled):hover, &:not(.disabled):focus { background: var(--d-hi); color: var(--d-hiink); }
+            &.disabled { opacity: .45; }
+        }
+
+        li > .dropbutton {
+            display: flex;
+            align-items: center;
+            height: 28px;
+            background: transparent !important;
+
+            a:first-child { border-right: 0 !important; }
+            a.dropdown {
+                height: 28px !important;
+                padding: 0 3px !important;
+                border: 1px solid var(--d-ink) !important;
+                border-left: 1px dotted var(--d-line) !important;
+                display: flex !important;
+                align-items: center;
+                min-width: 0 !important;
+                &:before { line-height: 26px !important; height: auto !important; font-size: 9px; margin: 0 !important; }
+            }
+        }
+
+        li > a.delete {
+            border-color: var(--d-acc) !important;
+            color: var(--d-acc);
+            &:not(.disabled):hover { background: var(--d-acc); color: var(--d-bg); &:before { color: var(--d-bg); } }
+        }
+
+        // Mark / More: quieter, no border
+        li > a.markmessage, li > a.more, li > a.print, li > a.prev, li > a.next {
+            border-color: transparent !important;
+            padding: 0 5px !important;
+            span.inner { display: none; }
+            &:before { margin: 0 !important; color: var(--d-mut); font-size: 13px; }
+        }
+    }
+}
+
+/* ------------------------------------------------------------------ */
+/* Opened message (preview frame + full view)                         */
+/* ------------------------------------------------------------------ */
+
+html.iframe body.task-mail, body.task-mail.action-show {
+    #layout-content > .content { padding-left: 24px; padding-right: 16px; }
+}
+
+#message-header {
+    margin-bottom: 0;
+
+    & > .subject {
+        font-family: @d-font-serif;
+        font-weight: 600;
+        font-size: 31px;
+        line-height: 1.1;
+        text-wrap: balance;
+        letter-spacing: -.015em;
+        font-variation-settings: "opsz" 144;
+        color: var(--d-ink);
+        margin: 18px 0 14px;
+        max-width: 640px;
+        white-space: normal;
+        overflow: visible;
+        text-overflow: clip;
+
+        &:before {
+            // kicker line «DISPACCIO» above the headline (folder-based kicker needs a plugin)
+            content: "Dispaccio \00b7  lettura";
+            display: block;
+            font-family: @d-font-mono;
+            .d-cap();
+            letter-spacing: .16em;
+            color: var(--d-acc);
+            margin-bottom: 8px;
+        }
+
+        body.status-flagged &:before {
+            content: "! Contrassegnato \00b7  lettura";
+            .d-cap();
+            font-family: @d-font-mono;
+            display: block;
+            float: none;
+            width: auto;
+            height: auto;
+            color: var(--d-acc);
+            margin-bottom: 8px;
+        }
+
+        a.extwin {
+            font-size: 12px;
+            vertical-align: middle;
+            margin-left: .3em;
+            &:before { font-size: 11px; line-height: 1; color: var(--d-mut); vertical-align: .35em; }
+            &:hover:before { color: var(--d-acc); }
+        }
+    }
+
+    & > .header {
+        img.contactphoto { display: none; }
+    }
+
+    .header-content { min-height: 0; }
+    .header-content .header-summary { display: none; }
+    .header-content .header-headers,
+    .header-content.details-view .header-headers {
+        display: table;
+        width: 100%;
+        border-top: 1px solid var(--d-ink);
+        border-bottom: 1px solid var(--d-line);
+        font-size: 12.5px;
+
+        tr:first-child td { padding-top: 8px; }
+        tr:last-child td { padding-bottom: 8px; }
+
+        td { padding: 1px 0; line-height: 1.55; }
+
+        tr:has(> td.from) .header-title,
+        tr:has(> td.to) .header-title,
+        tr:has(> td.cc) .header-title,
+        tr:has(> td.date) .header-title { font-size: 0; }
+        tr:has(> td.from) .header-title:before { content: "Da"; }
+        tr:has(> td.to) .header-title:before { content: "A"; }
+        tr:has(> td.cc) .header-title:before { content: "Cc"; }
+        tr:has(> td.date) .header-title:before { content: "Data"; }
+        tr:has(> td.from, > td.to, > td.cc, > td.date) .header-title:before,
+        tr:has(> td.from, > td.to, > td.cc, > td.date) .header-title:after { font-size: 12.5px; }
+
+        .header-title {
+            width: 64px;
+            white-space: nowrap;
+            padding-right: 1.5ch;
+            font-weight: 400;
+            text-transform: uppercase;
+            color: var(--d-mut);
+            &:after { content: ":"; }
+        }
+        .header { color: var(--d-ink); }
+        a.rcmContactAddress { color: var(--d-ink); text-decoration: none; }
+        a.rcmContactAddress[title]:after { content: " <" attr(title) ">"; color: var(--d-ink); }
+        a.rcmaddcontact { color: var(--d-mut); }
+    }
+
+    .header-links {
+        margin-top: 6px;
+        a {
+            .d-cap();
+            font-size: 9.5px;
+            color: var(--d-mut);
+            &:before { color: var(--d-acc); font-size: 11px; }
+            &.headers-details, &.headers-summary { display: none; }
+        }
+    }
+}
+
+#messagebody {
+    max-width: 640px;
+    margin-top: 12px;
+}
+
+.message-part div.pre,
+.message-part pre {
+    font-size: 12.5px;
+    line-height: 1.75;
+    color: var(--d-ink);
+}
+
+// Drop cap: plain-text messages only (HTML mail markup is unpredictable)
+#messagebody > .message-part:first-child > div.pre::first-letter {
+    float: left;
+    font-family: @d-font-serif;
+    font-weight: 800;
+    font-size: 60px;
+    line-height: .8;
+    padding: 6px 10px 0 0;
+    color: var(--d-acc);
+    font-variation-settings: "opsz" 144;
+}
+
+.message-part blockquote {
+    border-left: 2px solid var(--d-acc) !important;
+    border-right: 0 !important;
+    color: var(--d-mut) !important;
+    background: transparent !important;
+}
+
+// Attachments: double rule + small caps label, text rows «[+] name  size»
+#message-content .attachmentslist,
+#compose-attachments .attachmentslist {
+    border: 0 !important;
+    border-top: 4px double var(--d-ink) !important;
+    border-radius: 0 !important;
+    padding-top: 6px;
+    background: transparent;
+}
+
+#message-content {
+    .leftcol .attachmentslist:not(:empty):before {
+        content: "Allegati";
+        display: block;
+        .d-cap();
+        color: var(--d-mut);
+        margin: 0 0 4px;
+    }
+}
+
+.attachmentslist {
+    li {
+        border: 0 !important;
+        background: transparent !important;
+        border-radius: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+        float: none !important;
+        height: auto !important;
+
+        a.filename {
+            display: flex !important;
+            align-items: center;
+            gap: 1ch;
+            padding: 2px 0 !important;
+            color: var(--d-ink);
+            font-size: 12.5px;
+
+            &:before {
+                .d-reset-icon();
+                content: "[+]" !important;
+                color: var(--d-acc);
+            }
+            .attachment-name { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+            .attachment-size { color: var(--d-mut); margin-left: auto; font-size: 12px; }
+        }
+
+        a.drop, a.delete, a.cancel {
+            color: var(--d-mut);
+        }
+    }
+}
+
+/* ------------------------------------------------------------------ */
+/* Misc widgets                                                       */
+/* ------------------------------------------------------------------ */
+
+.popover {
+    border: 1px solid var(--d-ink);
+    box-shadow: none;
+}
+
+.menu.listing li a:not(.disabled):hover,
+.menu.listing li a:not(.disabled):focus {
+    background-color: var(--d-hi);
+    color: var(--d-hiink);
+}
+
+.ui-dialog .ui-dialog-titlebar {
+    font-family: @d-font-serif;
+    font-variation-settings: "opsz" 72;
+    border-bottom: 4px double var(--d-ink);
+}
+
+.formcontent legend, fieldset > legend, .propform legend {
+    .d-cap();
+    color: var(--d-mut);
+}
+
+.listing li.selected, .listing li.selected > a, .listing tr.selected td {
+    font-weight: 700;
+}
+
+/* Replace Elastic's default logo (only if the admin did not configure skin_logo) */
+#layout-menu .popover-header:has(> #logo[src*="skins/elastic/images/logo"]) {
+    position: relative;
+    #logo { visibility: hidden; }
+    &:before {
+        content: "";
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 34px;
+        height: 34px;
+        margin: -17px 0 0 -17px;
+        background-color: var(--d-acc);
+        // ?v=2: cache-buster (static.php serves images with max-age 7 days); bump it when the mark changes
+        -webkit-mask: url("../images/logo.svg?v=2") center / contain no-repeat;
+        mask: url("../images/logo.svg?v=2") center / contain no-repeat;
+    }
+}
+
+/* Login page: wordmark instead of the Roundcube logo */
+.task-login:has(#logo[src*="skins/elastic/images/logo"]) #layout-content:before {
+    content: "Il Dispaccio";
+    display: block;
+    position: relative;
+    top: 14vh;
+    font-family: @d-font-serif;
+    font-weight: 800;
+    font-size: 48px;
+    letter-spacing: -.02em;
+    font-variation-settings: "opsz" 144;
+    color: var(--d-ink);
+}
+.task-login #logo[src*="skins/elastic/images/logo"] { display: none; }
+.task-login #login-form {
+    border-top: 4px double var(--d-ink);
+    border-bottom: 1px solid var(--d-ink);
+    padding: 18px 0 10px;
+}
+
+
+/* Column widths closer to the mockup (users can still drag the splitters) */
+#layout-content { min-width: 0; }
+
+html.layout-large {
+    #layout-sidebar { flex: 0 0 215px; max-width: none; min-width: 190px; }
+    #layout-list { flex: 0 0 440px; max-width: 45%; min-width: 340px; }
+    #layout-content #toolbar-menu li:has(> a.hidden-large) { display: none; }
+}
+html.layout-normal {
+    #layout-sidebar { flex: 0 0 200px; max-width: none; min-width: 180px; }
+}
+
+/* Any selected list entry (settings sections, address books, contacts…): inverted block */
+.listing li.selected,
+.listing tr.selected td {
+    background-color: var(--d-hi) !important;
+}
+// Round 7: in the folder list the <li> holds more than its own row: the «Rubriche» label (li::before)
+// and the subfolder <ul>. Only the row link (li > a, styled above) may be inverted, never the whole <li>.
+#mailboxlist li.mailbox,
+#mailboxlist li.mailbox.selected,
+#mailboxlist li.mailbox.droptarget,
+#mailboxlist li.mailbox:hover,
+#mailboxlist li.mailbox:focus-within {
+    background-color: transparent !important;
+}
+#mailboxlist li.mailbox:before { background: transparent !important; }
+.listing li.selected > a,
+.listing li.selected > a:before,
+.listing li.selected > a span,
+.listing tr.selected td,
+.listing tr.selected td a,
+.listing tr.selected td span {
+    color: var(--d-hiink) !important;
+}
+
+
+/* ---- Round 2 (2 ott 2026) ---------------------------------- */
+
+/* 1. Inline image attachment under the body: a text row like «Allegati», no filled card */
+html p.image-attachment,
+html.dark-mode p.image-attachment {
+    position: static;
+    float: none;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0 1.5ch;
+    min-width: 0;
+    min-height: 0;
+    max-width: 640px;
+    margin: 16px 0 0;
+    padding: 6px 0 0;
+    border: 0;
+    border-top: 1px solid var(--d-line);
+    border-radius: 0;
+    background: transparent !important;
+    overflow: visible;
+
+    span {
+        position: static;
+        padding: 0;
+        font-size: 12.5px;
+        line-height: 1.6;
+        color: var(--d-mut) !important;
+    }
+
+    .image-filename {
+        order: 1;
+        flex: 1 1 auto;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        color: var(--d-ink) !important;
+        &:before { content: "[+]\00a0"; color: var(--d-acc); }
+    }
+    .image-filesize { order: 2; }
+    .attachment-links {
+        order: 3;
+        position: static;
+        background: transparent;
+        a { .d-cap(); font-size: 9.5px; color: var(--d-mut); margin-left: 1ch; }
+        a:hover { color: var(--d-acc); }
+    }
+    .image-link {
+        order: 4;
+        flex: 0 0 100%;
+        width: auto !important;
+        margin: 6px 0 0;
+        text-align: left;
+        img { max-width: 100% !important; border: 1px solid var(--d-line); }
+    }
+}
+
+/* 3. Task rail: short labels (Italian UI), logout in the secondary colour */
+html:lang(it) #taskmenu {
+    a.settings, a.theme, a.about {
+        span.inner { font-size: 0 !important; }
+        span.inner:after { font-size: 10.5px; }
+    }
+    a.settings span.inner:after { content: "Impost."; }
+    a.theme span.inner:after { content: "Tema"; }
+    a.about span.inner:after { content: "Info"; }
+}
+#taskmenu a.logout {
+    color: var(--d-mut) !important;
+    &:hover, &:focus { color: var(--d-ink) !important; }
+}
+
+/* 6. Mobile compose button: flat, crisp border, no glow */
+.floating-action-buttons a.button {
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    border: 1px solid var(--d-ink);
+    background: var(--d-acc) !important;
+    color: var(--d-bg) !important;
+    opacity: 1;
+}
+
+/* Optional: tables in mail bodies keep neutral rules, never accent ones */
+.message-htmlpart, .message-part {
+    table, th, td { border-color: var(--d-line); }
+}
+
+// Round 2 / item 5: month & weekday abbreviations lowercase in Italian («23 set», «mer 10:42»),
+// also for ajax-rendered list rows that don't go through the skin localization.
+html:lang(it) #messagelist td span.date,
+html:lang(it) #messagelist td.date { text-transform: lowercase; }
+html:lang(it) #message-header td.header.date,
+html:lang(it) .header-headers td.header.date { text-transform: lowercase; }
+
+/* ===== Round 3 ===================================================== */
+
+/* R3.1 HTML mail in dark mode: no inversion, but an intentional light «sheet»:
+   palette background instead of pure white, inner padding, thin rule, square corners. */
+html.dark-mode .message-htmlpart {
+    background-color: @d-bg !important;
+    color: @d-ink;
+    padding: 18px !important;
+    border: 1px solid @d-dk-mut;
+    border-radius: 0;
+    margin-top: .5rem;
+
+    a { color: @d-acc; }
+    table, th, td { border-color: @d-line; }
+}
+
+/* R3.2 Tried 13px plain-text body below 480px: hard-wrapped text still breaks the same way, so reverted.
+   See README «Known limitations». */
+
+/* R3.3 Mobile message footer: short labels so they never truncate */
+#layout-content .footer a.button {
+    &.prev, &.next {
+        span.inner { font-size: 0 !important; }
+        span.inner:after { font-size: 11.7px; }   // same as «Rispondi»
+    }
+    &.prev span.inner:after { content: "Prev."; }
+    &.next span.inner:after { content: "Next"; }
+}
+html:lang(it) #layout-content .footer a.button {
+    &.prev span.inner:after { content: "Prec."; }
+    &.next span.inner:after { content: "Succ."; }
+}
+
+/* ===== Round 4 ===================================================== */
+
+/* Hover menu (size · flag · delete): Elastic positions it relative to <tbody>, but our column
+   header (in-flow, ~31px) and the 9px row padding push the rows down -> it showed one row too high. */
+html:not(.touch) .listing-hover-menu { margin-top: 40px; }
+
+/* Mobile compose button: smaller flat square (44px, still a comfortable touch target), tucked
+   into the corner; the list gets bottom room so the last rows (and their dates) can scroll clear. */
+.floating-action-buttons a.button {
+    width: 44px;
+    height: 44px;
+    margin: 0 10px 10px 0;
+    &:before { width: 44px; height: 42px; line-height: 42px; font-size: 1.05rem; }
+}
+html.touch #messagelist-content::after,
+html.layout-phone #messagelist-content::after,
+html.layout-small #messagelist-content::after {
+    content: "";
+    display: block;
+    height: 64px;   // 44px button + 10px margin + 10px air
+}
+
+/* ===== Round 5: short viewports ===================================== */
+
+/* Touch layout: td.flags is absolutely positioned over the right end of the row (Elastic keeps it
+   transparent); our selected-row background made it opaque and it covered the date («mer 0…»). */
+html.touch #messagelist tr.selected td.flags,
+html.layout-phone #messagelist tr.selected td.flags { background: transparent !important; }
+
+/* Short heights (phone landscape, keyboard open): one slim masthead line, dateline hidden,
+   so the list keeps its room. */
+@media screen and (max-height: 520px) {
+    #dispaccio-masthead {
+        .mast-row { height: 34px !important; }
+        .mast-name { font-size: 21px !important; }
+        .mast-dateline { display: none !important; }
+    }
+}
+
+/* ===== Round 6: left-rail states (all AA) ============================
+   Elastic mixes three colour pairs here: hover (light bg), selected (inverted block) and :focus
+   (selected background, but normal text colour) – so a focused/clicked «Tema» became an empty navy block
+   and a hovered selected «E-Mail» turned light-on-light. One explicit pair per state instead:
+   normal   = mut on rail        hover / keyboard focus = ink on rail-hover
+   selected = hiink on hi (also when hovered or focused); a mouse-clicked item just keeps its state. */
+:root           { --d-rail-hover: darken(@d-bg2, 6%); }
+html.dark-mode  { --d-rail-hover: @d-dk-line; }
+
+#layout-menu #taskmenu a {
+    &:focus:not(:focus-visible) { background-color: transparent !important; }
+    &:hover, &:focus-visible {
+        background-color: var(--d-rail-hover) !important;
+        color: var(--d-ink) !important;
+    }
+    &:focus-visible { outline: 2px solid var(--d-acc); outline-offset: -2px; }
+
+    &.selected, &.selected:hover, &.selected:focus, &.selected:focus-visible {
+        background-color: var(--d-hi) !important;
+        color: var(--d-hiink) !important;
+    }
+}
+html.dark-mode #layout-menu #taskmenu a:not(.selected):not(:hover):not(:focus-visible) { color: var(--d-ink); }
+html.dark-mode #layout-menu #taskmenu a.logout:not(:hover):not(:focus-visible) { color: var(--d-mut) !important; }
+html.dark-mode #layout-menu .special-buttons a:not(:focus) { background-color: transparent; }
+// compose button in the rail (touch widths): accent text, stays accent on hover
+#layout-menu #taskmenu .action-buttons a:hover { color: var(--d-acc) !important; }
+
+/* ---- Round 7 (2 ott 2026) ---------------------------------------- */
+// Drop target in the folder list (dark): accent tint instead of Elastic's olive
+html.dark-mode #mailboxlist li.mailbox.droptarget > a { background-color: #3c2c2b !important; }  // ≈ accent at 20% over the sidebar
