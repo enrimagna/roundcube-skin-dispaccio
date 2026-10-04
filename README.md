@@ -50,10 +50,12 @@ sostituisce colori, caratteri e un solo template.
      ```
      Se usi `skins_allowed`, aggiungi `'dispaccio'` all'elenco.
    * oppure lascia scegliere agli utenti da **Impostazioni → Preferenze → Interfaccia utente → Tema interfaccia**.
-4. **Date consigliate** (le date più vecchie di una settimana diventano «23 set»). Aggiungi in `config/config.inc.php`:
+4. **Date consigliate** (nell'elenco le date più vecchie di una settimana diventano «23 set», con l'anno solo per la posta
+   degli anni precedenti, «8 mar 2025»; nell'intestazione del messaggio aperto la data è sempre completa, «8 mar 2026, 14:32»).
+   Aggiungi in `config/config.inc.php`:
    ```php
-   $config['prettydate'] = true;   // oggi: ora; ultimi 7 giorni: giorno + ora
-   $config['date_long']  = 'j M';  // più vecchie: «23 set»
+   $config['prettydate'] = true;          // oggi: ora; ultimi 7 giorni: giorno + ora
+   $config['date_long']  = 'j M Y, H:i';  // data completa; nell'elenco la skin toglie ora e anno corrente
    $config['dont_override'] = array_merge($config['dont_override'] ?? [], ['date_long']);
    ```
    La riga `dont_override` è **necessaria**. Senza, la prima volta che un utente salva *Preferenze → Interfaccia utente*
@@ -107,11 +109,12 @@ npx lessc --rewrite-urls=all --clean-css="--s1 --advanced" styles/styles.less > 
 * Tra 1025 e 1200 px di larghezza mittente e oggetto vengono accorciati parecchio.
 * Su smartphone il testo semplice con a capo fissi (~70 caratteri) va a capo una seconda volta.
 * «imap ● connesso» nella riga della data è decorativo: non controlla davvero la connessione.
-* Con `date_long = 'j M'` anche l'intestazione del messaggio aperto e la riga di citazione nelle risposte non mostrano
-  l'anno. Usa `'j M Y'` se ti serve.
+* Data completa nell'intestazione e anno nell'elenco solo con `date_long = 'j M Y, H:i'` (punto 4). Con il vecchio
+  `'j M'` (consigliato fino alla 1.0.0) la skin funziona ma l'anno non compare né nell'elenco né nell'intestazione.
+  L'accorciamento nell'elenco è fatto in JavaScript dal template `layout.html`.
 * Il template `templates/includes/layout.html` è una copia modificata di quello di Elastic. Dopo un aggiornamento di
   Roundcube conviene confrontarlo con `skins/elastic/templates/includes/layout.html`. L'unica aggiunta è il blocco
-  `Il Dispaccio: masthead`.
+  `Il Dispaccio: masthead` (più il piccolo script `Il Dispaccio: dates`).
 
 ## Risoluzione dei problemi
 
@@ -152,10 +155,11 @@ colours, fonts and a single template (`templates/includes/layout.html`, which ad
 2. Copy `dispaccio/` into `<roundcube>/skins/`, so you get `skins/dispaccio/meta.json` next to `skins/elastic/`.
 3. Set `$config['skin'] = 'dispaccio';` in `config/config.inc.php`, or let users pick it in Settings → Preferences →
    User Interface.
-4. Recommended date settings (older mail shown as «23 set»):
+4. Recommended date settings (list: older mail shown as «23 set», with the year only for mail from previous years,
+   «8 mar 2025»; opened message header: always the full date, «8 mar 2026, 14:32»):
    ```php
    $config['prettydate'] = true;
-   $config['date_long']  = 'j M';
+   $config['date_long']  = 'j M Y, H:i';   // the skin drops the time and the current year in the list
    $config['dont_override'] = array_merge($config['dont_override'] ?? [], ['date_long']);
    ```
    The `dont_override` line is required. Otherwise Roundcube stores `"<date format> <time format>"` in a user's
