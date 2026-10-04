@@ -6,9 +6,10 @@
 // Make Il Dispaccio the default skin (users can still pick another one in Preferences > User Interface)
 $config['skin'] = 'dispaccio';
 
-// Dates in the message list: today -> time, last 7 days -> weekday + time, older -> «23 set»
+// Dates in the message list: today -> time, last 7 days -> weekday + time, older -> «23 set» (current year)
+// or «8 mar 2025» (previous years; the skin shortens the full date). Opened message header: always «8 mar 2026, 14:32».
 $config['prettydate'] = true;
-$config['date_long'] = 'j M';
+$config['date_long'] = 'j M Y, H:i';
 
 // Required with date_long: otherwise the first save of Preferences > User Interface stores
 // "<date format> <time format>" (e.g. "Y-m-d H:i") in the user's prefs and «23 set» is lost.

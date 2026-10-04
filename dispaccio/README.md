@@ -56,17 +56,19 @@ npx lessc@4 --rewrite-urls=all --clean-css="--s1 --advanced" styles/styles.less 
 
 Only **one template** is overridden: `templates/includes/layout.html`. After every Roundcube upgrade, diff it
 against `skins/elastic/templates/includes/layout.html`. The only addition is the block marked
-`Il Dispaccio: masthead` (markup + a small script: dateline counters and the on-demand row hover menu).
+`Il Dispaccio: masthead` (markup + a small script: dateline counters and the on-demand row hover menu), plus the `Il Dispaccio: dates` script (full date in the reading header, year in the list
+only for previous years; see «Dates» below).
 
-## Dates («23 set») — recommended server config
+## Dates («23 set» / «8 mar 2025» / «8 mar 2026, 14:32») — recommended server config
 
-Dates older than a week are shown as day + abbreviated month (e.g. «23 set»). This is done with
-Roundcube's own date settings, set **server-side** in `config/config.inc.php` (not in the skin's
-`meta.json`, because skin config there would also lock the option for users):
+In the message list, dates older than a week are shown as day + abbreviated month (e.g. «23 set»), plus the year for
+mail from a previous year («8 mar 2025»). In the opened message header (DATA) the date is always complete, with year
+and time («8 mar 2026, 14:32», in the user's timezone). This uses Roundcube's own date settings, set **server-side**
+in `config/config.inc.php` (not in the skin's `meta.json`, because skin config there would also lock the option for users):
 
 ```php
-$config['prettydate']  = true;    // today: time; last 7 days: weekday + time
-$config['date_long']   = 'j M';   // older: «23 set» (month name from the Italian locale)
+$config['prettydate']  = true;          // today: time; last 7 days: weekday + time
+$config['date_long']   = 'j M Y, H:i';  // older: full date (month name from the Italian locale)
 // REQUIRED, otherwise the first save of Settings > Preferences > User Interface replaces it (see below)
 $config['dont_override'] = array_merge($config['dont_override'] ?? [], ['date_long']);
 ```
@@ -74,7 +76,7 @@ $config['dont_override'] = array_merge($config['dont_override'] ?? [], ['date_lo
 **Why `dont_override`:** Roundcube has no "long date" dropdown. Every time a user saves
 Settings → Preferences → User Interface (even just to switch skin), `prefs_save.php` rebuilds
 `date_long = "<date format> <time format>"` (e.g. `Y-m-d H:i`) and stores it in the user's preferences.
-That value then beats the server's `'j M'`, so older mail shows «2026-09-25 13:10».
+That value then beats the server's `date_long`, so older mail shows «2026-09-25 13:10».
 
 Adding `'j M'` to `date_formats` does not help. The saved value would still get the time appended
 (`j M H:i`), and `date_format` also drives the date pickers and contact dates, which need a year.
@@ -89,9 +91,18 @@ still apply to today's times, date pickers and contacts.
 The skin lowercases the Italian month and weekday abbreviations in the list and the header with CSS
 («23 set», «mer 10:42»), and also ships `localization/it_IT.inc` with lowercase month labels.
 
-Side effects of `date_long = 'j M'`: the header date of an opened message and the quote line of
-replies («Il 23 set, … ha scritto:») also show no year, so mail from previous years is not
-distinguishable by date alone. Use `'j M Y'` if that matters.
+**How the skin uses it (1.0.1):** Roundcube formats the header table's DATA row with the pretty date
+(«oggi 14:32», «dom 14:32», or `date_long`), but the hidden summary line («Da … il …») always with `date_long`.
+The small `Il Dispaccio: dates` script in `templates/includes/layout.html`:
+
+* reading view: copies the summary's full date into the DATA row (only if it contains a year, so with an old
+  `'j M'` config nothing changes);
+* message list (`insertrow` event): a date in the `date_long` form «8 mar 2025, 09:15» becomes «8 mar 2025», or
+  «8 mar» if it is from the current year (current year computed in the user's Roundcube timezone). The full date
+  stays in the cell's tooltip. «oggi …» and weekday dates are untouched.
+
+The quote line of replies («Il 8 mar 2026, 14:32, … ha scritto:») and the print view also get the full date.
+Up to 1.0.0 the recommendation was `date_long = 'j M'`, which dropped the year everywhere.
 
 ## Fonts / privacy
 

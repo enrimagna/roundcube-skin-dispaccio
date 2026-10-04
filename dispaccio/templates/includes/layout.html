@@ -118,6 +118,42 @@
 	})();
 	</script>
 	<roundcube:endif />
+	<roundcube:if condition="env:task == 'mail'" />
+	<!-- Il Dispaccio: dates. Needs the server config date_long = 'j M Y, H:i' (see README); otherwise nothing changes.
+	     Reading header: full date from the (hidden) summary line, which Roundcube formats with date_long.
+	     Message list: drop the year (and the time) for mail from the current year, keep the year otherwise. -->
+	<script>
+	(function() {
+		var tz = '<roundcube:var name="config:timezone" />', full = /^(.*\S)\s+(\d{4}),\s*\d{1,2}[:.]\d{2}(\s*[ap]\.?m\.?)?$/i;
+		function thisYear() {
+			try { return new Intl.DateTimeFormat('en-US', { year: 'numeric', timeZone: tz && tz != 'auto' ? tz : undefined }).format(new Date()); }
+			catch (e) { return String(new Date().getFullYear()); }
+		}
+		function shorten(el, year) {
+			var text = (el.textContent || '').trim(), m = text.match(full);
+			if (!m) return;
+			el.textContent = m[2] == year ? m[1] : m[1] + ' ' + m[2];
+			el.title = text;
+		}
+		function header() {
+			var src = document.querySelector('#message-header .header-summary .text-nowrap'),
+				dst = document.querySelectorAll('#message-header td.header.date');
+			if (!src || !/\d{4}/.test(src.textContent)) return;
+			for (var i = 0; i < dst.length; i++) dst[i].textContent = src.textContent.trim();
+		}
+		document.addEventListener('DOMContentLoaded', function() {
+			header();
+			if (!window.rcmail) return;
+			rcmail.addEventListener('insertrow', function(e) {
+				var tr = e.row && e.row.obj;
+				if (!tr || !e.uid) return;
+				var cells = tr.querySelectorAll('span.date, td.date'), year = thisYear();
+				for (var i = 0; i < cells.length; i++) shorten(cells[i], year);
+			});
+		});
+	})();
+	</script>
+	<roundcube:endif />
 	<roundcube:if condition="!env:framed || env:extwin" />
 		<div id="<roundcube:exp expression="env:action == 'print' ? 'print-' : ''">layout">
 	<roundcube:endif />
