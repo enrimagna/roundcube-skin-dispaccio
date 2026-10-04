@@ -7056,18 +7056,20 @@ html.layout-normal:not(.touch) #layout-menu #taskmenu .action-buttons {
   font-weight: 400;
   color: var(--d-mut);
   margin-right: 8px;
-  min-width: 1ch;
+  min-width: 2ch;
+  text-align: right;
+  flex: 0 0 auto;
 }
 #mailboxlist li.mailbox > a:after {
   content: " ....................................................................";
   order: 1;
   flex: 1 1 auto;
-  min-width: 2ch;
+  min-width: 1ch;
   overflow: hidden;
   white-space: nowrap;
   color: var(--d-line);
   letter-spacing: 2px;
-  margin-left: 6px;
+  margin-left: 4px;
 }
 #mailboxlist li.mailbox > a .unreadcount {
   order: 2;
@@ -7106,6 +7108,44 @@ html.layout-normal:not(.touch) #layout-menu #taskmenu .action-buttons {
 }
 #mailboxlist li.mailbox div.treetoggle {
   color: var(--d-mut);
+  top: auto;
+  left: 1px;
+  width: 16px;
+  height: 26px;
+  line-height: 26px;
+  margin-top: -26px;
+  text-align: center;
+  z-index: 1;
+}
+#mailboxlist li.mailbox div.treetoggle:before {
+  margin: 0;
+}
+#mailboxlist:not(.notree) li.mailbox > a {
+  padding-left: 18px;
+}
+#mailboxlist:not(.notree) ul li.mailbox > a {
+  padding-left: 34px;
+}
+#mailboxlist:not(.notree) ul li.mailbox div.treetoggle {
+  left: 17px;
+}
+#mailboxlist:not(.notree) ul ul li.mailbox > a {
+  padding-left: 50px;
+}
+#mailboxlist:not(.notree) ul ul li.mailbox div.treetoggle {
+  left: 33px;
+}
+#mailboxlist:not(.notree) ul ul ul li.mailbox > a {
+  padding-left: 66px;
+}
+#mailboxlist:not(.notree) ul ul ul li.mailbox div.treetoggle {
+  left: 49px;
+}
+#mailboxlist:not(.notree) ul ul ul ul li.mailbox > a {
+  padding-left: 82px;
+}
+#mailboxlist:not(.notree) ul ul ul ul li.mailbox div.treetoggle {
+  left: 65px;
 }
 #mailboxlist > li.mailbox:is(.inbox, .drafts, .sent, .junk, .trash, .archive) + li.mailbox:not(.inbox, .drafts, .sent, .junk, .trash, .archive):before {
   content: "Rubriche";
@@ -7717,7 +7757,7 @@ body.task-mail.action-show #layout-content > .content {
   line-height: 1.1;
   text-wrap: balance;
   letter-spacing: -0.015em;
-  font-variation-settings: "opsz" 144;
+  font-variation-settings: "opsz" 48;
   color: var(--d-ink);
   margin: 18px 0 14px;
   max-width: 640px;

@@ -318,19 +318,21 @@ html.layout-large:not(.touch), html.layout-normal:not(.touch) {
                 font-weight: 400;
                 color: var(--d-mut);
                 margin-right: 8px;
-                min-width: 1ch;
+                min-width: 2ch;          // room for «10», «11»… so names line up
+                text-align: right;
+                flex: 0 0 auto;
             }
 
             &:after {
                 content: " ....................................................................";
                 order: 1;
                 flex: 1 1 auto;
-                min-width: 2ch;
+                min-width: 1ch;
                 overflow: hidden;
                 white-space: nowrap;
                 color: var(--d-line);
                 letter-spacing: 2px;
-                margin-left: 6px;
+                margin-left: 4px;
             }
 
             .unreadcount {
@@ -365,8 +367,37 @@ html.layout-large:not(.touch), html.layout-normal:not(.touch) {
 
         &.droptarget > a { outline: 1px dashed var(--d-acc); }
 
-        // treetoggle for subfolders
-        div.treetoggle { color: var(--d-mut); }
+        // treetoggle for subfolders: sits in its own gutter on the row of
+        // its <a>. top:auto keeps it at its static position (just below the
+        // <a>), the negative margin lifts it onto that row, so it stays
+        // aligned even when the li carries the «Rubriche» label above it.
+        div.treetoggle {
+            color: var(--d-mut);
+            top: auto;
+            left: 1px;
+            width: 16px;
+            height: 26px;
+            line-height: 26px;
+            margin-top: -26px;
+            text-align: center;
+            z-index: 1;
+
+            &:before { margin: 0; }
+        }
+    }
+
+    // Tree mode: a left gutter for the toggle on every row (so names line
+    // up), plus one indent step per nesting level.
+    &:not(.notree) {
+        li.mailbox > a { padding-left: 18px; }
+        ul li.mailbox > a { padding-left: 34px; }
+        ul li.mailbox div.treetoggle { left: 17px; }
+        ul ul li.mailbox > a { padding-left: 50px; }
+        ul ul li.mailbox div.treetoggle { left: 33px; }
+        ul ul ul li.mailbox > a { padding-left: 66px; }
+        ul ul ul li.mailbox div.treetoggle { left: 49px; }
+        ul ul ul ul li.mailbox > a { padding-left: 82px; }
+        ul ul ul ul li.mailbox div.treetoggle { left: 65px; }
     }
 
     // First user folder after the special ones gets the «Rubriche» label
@@ -824,7 +855,10 @@ html.iframe body.task-mail, body.task-mail.action-show {
         line-height: 1.1;
         text-wrap: balance;
         letter-spacing: -.015em;
-        font-variation-settings: "opsz" 144;
+        // opsz 48, not the display 144: at 144 Fraunces draws a flat-topped
+        // «3» that reads as «5» and a «4» that melts into a preceding dash,
+        // and subjects are full of counts and dates («· 3 mail», «28 set–4 ott»).
+        font-variation-settings: "opsz" 48;
         color: var(--d-ink);
         margin: 18px 0 14px;
         max-width: 640px;
